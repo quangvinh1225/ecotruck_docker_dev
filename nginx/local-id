@@ -1,0 +1,25 @@
+server {
+	listen 80;
+	listen [::]:80;
+
+	access_log /var/log/nginx/access-local-id.log fulllog;
+
+	server_name local-id.ecotruck.vn;
+
+	root /opt/code/id/web;
+	index index.php;
+
+	location / {
+		try_files $uri /index.php$is_args$args;
+	}
+
+	# pass the PHP scripts to FastCGI server
+	location ~ \.php(/|$) {
+		fastcgi_index index.php;
+		fastcgi_pass unix:/run/php/php7.2-fpm.sock;
+		fastcgi_split_path_info ^(.+\.php)(/.*)$;
+		include fastcgi_params;
+		fastcgi_param  SERVER_NAME $host;
+		fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+	}
+}

@@ -1,0 +1,26 @@
+#==START-ECOHOST==
+{IP} local-id.ecotruck.vn
+{IP} local-mc.ecotruck.vn
+{IP} local-vc.ecotruck.vn
+{IP} local-center.ecotruck.vn
+{IP} local-api-id.ecotruck.vn
+{IP} local-api-mc.ecotruck.vn
+{IP} local-api-vc.ecotruck.vn
+{IP} local-api-center.ecotruck.vn
+{IP} local-logic-id.ecotruck.vn
+{IP} local-logic-mc.ecotruck.vn
+{IP} local-logic-vc.ecotruck.vn
+{IP} local-logic-center.ecotruck.vn
+{IP} local-repo-am.ecotruck.vn
+{IP} local-repo-core.ecotruck.vn
+{IP} local-repo-accounting.ecotruck.vn
+{IP} local-repo-doc.ecotruck.vn
+{IP} local-repo-location.ecotruck.vn
+{IP} local-repo-tracking.ecotruck.vn
+{IP} local-repo-price.ecotruck.vn
+{IP} local-repo-notification.ecotruck.vn
+{IP} local-repo-analytics.ecotruck.vn
+{IP} local-memcache.ecotruck.vn
+{IP} local-rabbitmq.ecotruck.vn
+{IP} local-es.ecotruck.vn
+#==END-ECOHOST==

@@ -1,0 +1,15 @@
+server {
+	listen 80;
+	listen [::]:80;
+
+	access_log /var/log/nginx/access-local-vc.log fulllog;
+
+	server_name local-vc.ecotruck.vn;
+
+	root /opt/code/web.vc/dist/local;
+	index index.html index.htm;
+
+	location / {
+		try_files try_files $uri /index.html;
+	}
+}

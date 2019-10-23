@@ -1,0 +1,17 @@
+server {
+	listen 80;
+	listen [::]:80;
+
+        access_log /var/log/nginx/access-local-logic-center.log fulllog;
+	
+	server_name local-logic-center.ecotruck.vn;
+	location = /favicon.ico { access_log off; log_not_found off; }
+
+    	location / {
+		client_max_body_size 100M;
+
+        	include         uwsgi_params;
+	        uwsgi_pass      unix:/var/run/uwsgi-local-logic-center.sock;
+        	uwsgi_read_timeout 600;
+	}
+}
