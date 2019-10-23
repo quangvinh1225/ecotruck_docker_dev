@@ -1,6 +1,6 @@
 FROM ecotruck_base
 
-LABEL maintainer="vinh Nguyen (quangvinh68@gmail.vn)"
+LABEL maintainer="vinh Nguyen (quangvinh1225@gmail.com)"
 
 ### update some system configuration
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf && \

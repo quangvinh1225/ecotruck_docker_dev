@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-LABEL maintainer="vinh Nguyen (quangvinh68@gmail.vn)"
+LABEL maintainer="vinh Nguyen (quangvinh1225@gmail.com)"
 
 # Base ecotruck images
 # Install base packages and remove the apt packages cache when done.
