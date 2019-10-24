@@ -9,9 +9,11 @@ RUN echo "daemon off;" >> /etc/nginx/nginx.conf && \
 ### copy data to container
 COPY . /opt
 
-### config ecotruck system
-RUN mkdir /run/php /opt/code \
-	&& cp /opt/nginx/* /etc/nginx/sites-enabled/
+### config system
+RUN mkdir /run/sshd /var/log/supervisord /opt/development \
+	&& cp /opt/nginx/* /etc/nginx/sites-enabled/ \
+	&& passwd -d root && sed -i 's/nullok_secure/nullok/' /etc/pam.d/common-auth \
+	&& echo "StrictModes no\nPasswordAuthentication yes\nPermitRootLogin yes\nPermitEmptyPasswords yes" >> /etc/ssh/sshd_config
 
 #expose ports and cmd
 EXPOSE 80

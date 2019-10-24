@@ -4,12 +4,10 @@ LABEL maintainer="vinh Nguyen (quangvinh1225@gmail.com)"
 
 # Base ecotruck images
 # Install base packages and remove the apt packages cache when done.
+# runtime packages
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
         apt-utils \
-	inetutils-ping \
-	vim \
-	net-tools \
 	openjdk-8-jre \
 	nginx \
 	libmysqlclient-dev \
@@ -30,8 +28,22 @@ RUN apt-get update \
 	&& pip install supervisor uwsgi \
 	&& curl -O curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.16.tar.gz \
 	&& tar xzf elasticsearch-5.6.16.tar.gz && rm elasticsearch-5.6.16.tar.gz \
-	&& useradd -d /elasticsearch-5.6.16 -M -s /bin/bash -U elasticsearch \
+	&& useradd -r -d /elasticsearch-5.6.16 -M -s /bin/bash elasticsearch \
 	&& chown -R elasticsearch:elasticsearch /elasticsearch-5.6.16
+
+# development packages
+RUN apt-get install -y \
+	inetutils-ping \
+	net-tools \
+	telnet \
+	openssh-server \
+	vim \
+	git \
+	composer \
+	npm \
+	php7.2-mbstring \
+	zip \
+	mysql-client
 
 RUN rm -rf /var/lib/apt/lists/*
 
