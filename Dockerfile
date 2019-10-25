@@ -13,7 +13,8 @@ COPY . /opt
 RUN mkdir /run/sshd /var/log/supervisord /opt/development \
 	&& cp /opt/nginx/* /etc/nginx/sites-enabled/ \
 	&& passwd -d root && sed -i 's/nullok_secure/nullok/' /etc/pam.d/common-auth \
-	&& echo "StrictModes no\nPasswordAuthentication yes\nPermitRootLogin yes\nPermitEmptyPasswords yes" >> /etc/ssh/sshd_config
+	&& echo "StrictModes no\nPasswordAuthentication yes\nPermitRootLogin yes\nPermitEmptyPasswords yes" >> /etc/ssh/sshd_config \
+	&& ln -s /opt/supervisor/supervisord.conf /etc/supervisord.conf
 
 #expose ports and cmd
 EXPOSE 80

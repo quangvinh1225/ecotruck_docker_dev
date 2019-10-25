@@ -111,6 +111,7 @@ if [ ! -d "vendor" ]; then
 	chmod -R o+w runtime/
 	chmod -R o+w web/assets/
 	composer install
+	mv vendor/bower-asset vendor/bower
 	touch $SETUPTRACKING/id.installed
 fi
 
@@ -127,7 +128,7 @@ cd "$CODEPATH/web.ic"
 [ ! -f "$SETUPTRACKING/web.ic.installed" ] && rm -rf $CODEPATH/web.ic/dist
 if [ ! -d "dist" ]; then
 	npm install
-	npm run-script ng build -- --prod -e=local
+	node_modules/.bin/ng build --prod -e=local
 	touch $SETUPTRACKING/web.ic.installed
 fi
 
@@ -137,7 +138,7 @@ cd "$CODEPATH/web.mc"
 [ ! -f "$SETUPTRACKING/web.mc.installed" ] && rm -rf $CODEPATH/web.mc/dist
 if [ ! -d "dist" ]; then
 	npm install
-	npm run-script ng build -- --prod -e=local
+	node_modules/.bin/ng build --prod -e=local
 	touch $SETUPTRACKING/web.mc.installed
 fi
 
@@ -147,7 +148,7 @@ cd "$CODEPATH/web.vc"
 [ ! -f "$SETUPTRACKING/web.vc.installed" ] && rm -rf $CODEPATH/web.vc/dist
 if [ ! -d "dist" ]; then
 	npm install
-	npm run-script ng build -- --configuration=local
+	node_modules/.bin/ng build --configuration=local
 	touch $SETUPTRACKING/web.vc.installed
 fi
 
