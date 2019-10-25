@@ -3,6 +3,7 @@ set -e
 
 BASEPATH="/opt/development"
 CODEPATH="$BASEPATH/code"
+SETUPTRACKING="$BASEPATH/.setup_process"
 
 echo "=========================================="
 echo "Cache user and pass for bitbucket.org"
@@ -19,6 +20,7 @@ fi
 
 # create code dir
 [ ! -d "$CODEPATH" ] && mkdir $CODEPATH
+[ ! -d "$SETUPTRACKING" ] && mkdir $SETUPTRACKING
 
 ### Checkout all codebase suite for docker run
 echo "=========================================="
@@ -51,9 +53,11 @@ cd $CODEPATH
 for project in $projects
 do
 	echo "Checking out $project"
+	[ ! -f "$SETUPTRACKING/$project.git" ] && rm -rf $CODEPATH/$project
 	if [ ! -d "$CODEPATH/$project" ]; then
 		# git clone git@bitbucket.org:ecotruck/$project.git
 		git clone https://bitbucket.org/ecotruck/$project.git
+		touch $SETUPTRACKING/$project.git
 	fi
 done
 
@@ -84,11 +88,14 @@ for project in $python_projects
 do
 	echo "Create virtual environment for $project"
 	if [ -d "$CODEPATH/$project" ]; then
+		[ ! -f "$SETUPTRACKING/$project.installed" ] && rm -rf $CODEPATH/$project/venv
 		if [ ! -d "$CODEPATH/$project/venv" ]; then
 			python3 -m venv "$CODEPATH/$project/venv"
 			source $CODEPATH/$project/venv/bin/activate
+			$CODEPATH/$project/venv/bin/pip3 install wheel
 			$CODEPATH/$project/venv/bin/pip3 install -r "$CODEPATH/$project/requirements.txt"
 			deactivate
+			touch $SETUPTRACKING/$project.installed
 		fi
 	else
 		echo "Code base is not existed: $project"
@@ -99,44 +106,50 @@ done
 echo "=========================================="
 echo "Process dependencies of yii2 php projects - id"
 cd "$CODEPATH/id"
+[ ! -f "$SETUPTRACKING/id.installed" ] && rm -rf $CODEPATH/id/vendor
 if [ ! -d "vendor" ]; then
 	chmod -R o+w runtime/
 	chmod -R o+w web/assets/
 	composer install
+	touch $SETUPTRACKING/id.installed
 fi
 
-# build angular app
+echo "=========================================="
+echo "Copying setting files"
+cp -rn $BASEPATH/settings/default/* $CODEPATH/  # copy if not existed
+cp -r $BASEPATH/settings/local/* $CODEPATH/  # copy and override
+
+### build angular app
 export NODE_OPTIONS=--max_old_space_size=8192 
 echo "=========================================="
 echo "Process dependencies angular project - web-ic"
 cd "$CODEPATH/web.ic"
+[ ! -f "$SETUPTRACKING/web.ic.installed" ] && rm -rf $CODEPATH/web.ic/dist
 if [ ! -d "dist" ]; then
 	npm install
-	npm run-script ng build --prod -e=local
+	npm run-script ng build -- --prod -e=local
+	touch $SETUPTRACKING/web.ic.installed
 fi
 
 echo "=========================================="
 echo "Process dependencies angular project - web-mc"
 cd "$CODEPATH/web.mc"
+[ ! -f "$SETUPTRACKING/web.mc.installed" ] && rm -rf $CODEPATH/web.mc/dist
 if [ ! -d "dist" ]; then
 	npm install
-	npm run-script ng build --prod -e=local
+	npm run-script ng build -- --prod -e=local
+	touch $SETUPTRACKING/web.mc.installed
 fi
 
 echo "=========================================="
 echo "Process dependencies angular project - web-vc"
 cd "$CODEPATH/web.vc"
+[ ! -f "$SETUPTRACKING/web.vc.installed" ] && rm -rf $CODEPATH/web.vc/dist
 if [ ! -d "dist" ]; then
 	npm install
-	npm run-script ng build --configuration=local
+	npm run-script ng build -- --configuration=local
+	touch $SETUPTRACKING/web.vc.installed
 fi
-
-echo "=========================================="
-echo "Copying setting files"
-# copy if not existed
-cp -rn $BASEPATH/settings/default/* $CODEPATH/
-# copy and override
-cp -r $BASEPATH/settings/local/* $CODEPATH/
 
 echo "Chown new files"
 chown -R `stat $BASEPATH -c %u:%g` $CODEPATH/

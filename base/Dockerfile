@@ -17,6 +17,7 @@ RUN apt-get update \
 	build-essential \
 	python3.6-dev \
 	python3.6-distutils \
+	python3.6-venv \
 	python3.6 \
 	php7.2 \
 	php7.2-fpm \
