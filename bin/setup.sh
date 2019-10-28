@@ -53,12 +53,34 @@ cd $CODEPATH
 for project in $projects
 do
 	echo "Checking out $project"
+	# Clone git project
 	[ ! -f "$SETUPTRACKING/$project.git" ] && rm -rf $CODEPATH/$project
 	if [ ! -d "$CODEPATH/$project" ]; then
 		# git clone git@bitbucket.org:ecotruck/$project.git
 		git clone https://bitbucket.org/ecotruck/$project.git
 		touch $SETUPTRACKING/$project.git
 	fi
+
+	cd $CODEPATH/$project
+	# add a git hook for commit message with jira task id 
+	echo "Installing git hook"
+	if [ ! -f "$SETUPTRACKING/$project.githook" ]; then
+		if [ -d .git/hooks ]; then 
+			HOOKF=.git/hooks/commit-msg 
+			TMPHOOKF="/opt/bin/.setup_git_commit_hook"
+			if [ ! -f $HOOKF ]; then 
+				cp $TMPHOOKF $HOOKF
+				chmod 755 $HOOKF; 
+			else 
+				echo "WARNING: $HOOKF exists"
+			fi 
+		else 
+			echo "WARNING: Not a git repo" 
+		fi
+		sed -i 's/\[A-Z.*"/[A-Z0-9]{1,10}-[A-Z0-9]+"/g' $HOOKF
+		touch $SETUPTRACKING/$project.githook
+	fi
+	cd $CODEPATH
 done
 
 ### Create virtual env for python projects
@@ -117,8 +139,11 @@ fi
 
 echo "=========================================="
 echo "Copying setting files"
-cp -rn $BASEPATH/settings/default/* $CODEPATH/  # copy if not existed
-cp -r $BASEPATH/settings/local/* $CODEPATH/  # copy and override
+if [ ! -f "$SETUPTRACKING/settings.installed" ]; then
+	cp -rn $BASEPATH/settings/default/* $CODEPATH/  # copy if not existed
+	cp -r $BASEPATH/settings/local/* $CODEPATH/  # copy and override
+	touch "$SETUPTRACKING/settings.installed"
+fi
 
 ### build angular app
 export NODE_OPTIONS=--max_old_space_size=8192 
@@ -128,7 +153,7 @@ cd "$CODEPATH/web.ic"
 [ ! -f "$SETUPTRACKING/web.ic.installed" ] && rm -rf $CODEPATH/web.ic/dist
 if [ ! -d "dist" ]; then
 	npm install
-	node_modules/.bin/ng build --prod -e=local
+	node_modules/.bin/ng build -e=local
 	touch $SETUPTRACKING/web.ic.installed
 fi
 
@@ -138,7 +163,7 @@ cd "$CODEPATH/web.mc"
 [ ! -f "$SETUPTRACKING/web.mc.installed" ] && rm -rf $CODEPATH/web.mc/dist
 if [ ! -d "dist" ]; then
 	npm install
-	node_modules/.bin/ng build --prod -e=local
+	node_modules/.bin/ng build -e=local
 	touch $SETUPTRACKING/web.mc.installed
 fi
 

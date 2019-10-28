@@ -6,7 +6,7 @@ server {
 
 	server_name local-vc.ecotruck.vn;
 
-	root /opt/development/code/web.vc/dist/local;
+	root /opt/development/code/web.vc/dist;
 	index index.html index.htm;
 
 	location / {
