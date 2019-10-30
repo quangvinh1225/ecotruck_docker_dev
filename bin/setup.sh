@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-BASEPATH="/opt/development"
+BASEPATH="/opt/ecotruck_development"
 CODEPATH="$BASEPATH/code"
 SETUPTRACKING="$BASEPATH/.setup_process"
 

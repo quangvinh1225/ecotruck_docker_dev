@@ -2,13 +2,13 @@
 set -e
 
 # add eco hosts to file /etc/hosts 
-if [ ! -f "/opt/development/local-hosts" ]; then
+if [ ! -f "/opt/ecotruck_development/local-hosts" ]; then
 	echo "Local domains file is not exist. Make sure your map volumn development correctly."
 	exit 1
 fi
 HOST_EXISTED=$(grep 'END-ECOHOST' /etc/hosts | wc -l)
 if [ "$HOST_EXISTED" = "0" ]; then
-	cat /opt/development/local-hosts | sed 's/{IP}/127.0.0.1/g' >> /etc/hosts
+	cat /opt/ecotruck_development/local-hosts | sed 's/{IP}/127.0.0.1/g' >> /etc/hosts
 fi
 
 # "Cache user and pass for bitbucket.org"
@@ -45,7 +45,7 @@ repo-tracking
 
 for project in $projects
 do
-	if [ ! -d "/opt/development/code/$project" ]; then
+	if [ ! -d "/opt/ecotruck_development/code/$project" ]; then
 		echo "Code base is missing $project"
 		exit 1
 	fi

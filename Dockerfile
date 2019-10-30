@@ -10,7 +10,7 @@ RUN echo "daemon off;" >> /etc/nginx/nginx.conf && \
 COPY . /opt
 
 ### config system
-RUN mkdir /run/sshd /var/log/uwsgi /var/log/supervisord /opt/development \
+RUN mkdir /run/sshd /var/log/uwsgi /var/log/supervisord /opt/ecotruck_development \
 	&& cp /opt/nginx/* /etc/nginx/sites-enabled/ \
 	&& passwd -d root && sed -i 's/nullok_secure/nullok/' /etc/pam.d/common-auth \
 	&& echo "StrictModes no\nPasswordAuthentication yes\nPermitRootLogin yes\nPermitEmptyPasswords yes" >> /etc/ssh/sshd_config \
