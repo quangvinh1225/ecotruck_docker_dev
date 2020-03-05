@@ -15,7 +15,8 @@ RUN mkdir /run/sshd /var/log/uwsgi /var/log/supervisord /opt/ecotruck_developmen
 	&& passwd -d root && sed -i 's/nullok_secure/nullok/' /etc/pam.d/common-auth \
 	&& echo "StrictModes no\nPasswordAuthentication yes\nPermitRootLogin yes\nPermitEmptyPasswords yes" >> /etc/ssh/sshd_config \
 	&& ln -s /opt/supervisor/supervisord.conf /etc/supervisord.conf \
-	&& sed -i 's|Xms2g|Xms512m|g' /elasticsearch-5.6.16/config/jvm.options && sed -i 's|Xmx2g|Xmx512m|g' /elasticsearch-5.6.16/config/jvm.options
+	&& sed -i 's|Xms2g|Xms512m|g' /elasticsearch-5.6.16/config/jvm.options && sed -i 's|Xmx2g|Xmx512m|g' /elasticsearch-5.6.16/config/jvm.options \
+	&& echo "network.host: 0.0.0.0\ntransport.host: localhost" >> /elasticsearch-5.6.16/config/elasticsearch.yml
 
 #expose ports and cmd
 EXPOSE 80
