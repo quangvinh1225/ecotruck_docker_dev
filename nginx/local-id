@@ -6,7 +6,7 @@ server {
 
 	server_name local-id.ecotruck.vn;
 
-	root /opt/ecotruck_development/code/id/web;
+	root /opt/ecotruck/code/id/web;
 	index index.php;
 
 	location / {
