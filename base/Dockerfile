@@ -50,9 +50,15 @@ RUN apt-get update && apt-get install -y \
 	zip \
 	libmysqlclient-dev \
 	libheif-dev \
-	libmagickwand-dev \
-	# Clear apt caches
-	&& rm -rf /var/lib/apt/lists/*
+	libmagickwand-dev 
+
+RUN apt-get install -y software-properties-common \
+    && add-apt-repository -y ppa:strukturag/libde265 \
+    && add-apt-repository -y ppa:strukturag/libheif \
+    && apt-get install -y libde265-0 libheif1 libheif-dev \
+    && npm install npm -g
+
+RUN rm -rf /var/lib/apt/lists/*
 
 	# config sshd for access root without passwd
 RUN mkdir /run/sshd \ 

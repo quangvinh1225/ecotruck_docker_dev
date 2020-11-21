@@ -54,6 +54,19 @@ if [ ! -d "$SETUP_PATH/mysqldata" ]; then
 	echo "DB migrating..."
 	$SETUP_PATH/ecotruck_development/scripts/setup_db_migration.sh
 	touch "$SETUP_PATH/.setup_process/db.initialized"
+else
+	echo "Start mysql"
+	mysqld --daemonize && sleep 1
+	mysql <<< "UPDATE mysql.user SET host='%' WHERE user='root';"	# allow access from all host
+
+	echo "Start rabbitmq"
+	/usr/sbin/rabbitmq-server -detached
+
+	# stop services on exit
+	trap "kill `cat /run/mysqld/mysqld.pid`; rabbitmqctl stop; exit 0;" EXIT
+
+	echo "DB migrating..."
+	$SETUP_PATH/ecotruck_development/scripts/setup_db_migration.sh
 fi
 
 touch "$SETUP_PATH/.setup_process/full.done"
